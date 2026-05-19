@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+/* ═══════════════════════════════
+   CSS VARIABLES
+═══════════════════════════════ */
+:root {
+  --orange:       #e8521a;
+  --orange-light: #ff7a3d;
+  --orange-dark:  #c43d0e;
+  --gold:         #f5c842;
+  --gold-dark:    #d4a017;
+  --cream:        #fff8f0;
+  --text-dark:    #2d1a00;
+  --text-mid:     #6b3a10;
+  --shadow:       0 4px 16px rgba(0,0,0,0.25);
+  --shadow-heavy: 0 8px 32px rgba(0,0,0,0.4);
+  --radius:       14px;
+  --radius-sm:    8px;
+  --card-radius:  10px;
+  --font-main:    'Nunito', sans-serif;
+  --font-display: 'Fredoka One', cursive;
+}
+
+/* ═══════════════════════════════
+   RESET
+═══════════════════════════════ */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-main);
+  background: #1a0a00;
+  overflow: hidden;
+  height: 100dvh;
+  width: 100vw;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* ═══════════════════════════════
+   PAGE SYSTEM
+═══════════════════════════════ */
+.page {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.page.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════
+   SHARED BUTTONS
+═══════════════════════════════ */
+.gd-btn {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+  letter-spacing: 0.5px;
+}
+.gd-btn:active { transform: translateY(2px); }
+
+.btn-primary {
+  background: linear-gradient(145deg, var(--orange-light), var(--orange));
+  color: white;
+  box-shadow: 0 3px 0 var(--orange-dark), 0 6px 16px rgba(232,82,26,0.35);
+}
+.btn-primary:active {
+  box-shadow: 0 1px 0 var(--orange-dark), 0 2px 8px rgba(232,82,26,0.2);
+}
+
+.btn-secondary {
+  background: linear-gradient(145deg, #fff, #f0e8df);
+  color: var(--text-dark);
+  box-shadow: 0 3px 0 #c4b0a0, 0 6px 16px rgba(0,0,0,0.15);
+}
+.btn-secondary:active {
+  box-shadow: 0 1px 0 #c4b0a0, 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.btn-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════
+   START OVERLAY (transition anim)
+═══════════════════════════════ */
+#start-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#start-overlay.show { display: flex; }
+
+#start-anim-text {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3rem);
+  color: var(--gold);
+  text-shadow: 0 0 20px rgba(245,200,66,0.6);
+  animation: fly-across 2s ease-in-out forwards;
+}
+
+@keyframes fly-across {
+  0%   { transform: translateX(-100vw); opacity: 1; }
+  45%  { transform: translateX(0);      opacity: 1; }
+  70%  { transform: translateX(0);      opacity: 1; }
+  100% { transform: translateX(100vw);  opacity: 0; }
+}
+
+/* ═══════════════════════════════
+   CONFIRM POPUP
+═══════════════════════════════ */
+#confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 250;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+#confirm-overlay.show { display: flex; }
+
+#confirm-box {
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: min(320px, 88vw);
+  text-align: center;
+  box-shadow: var(--shadow-heavy);
+}
+
+#confirm-box p {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.confirm-btns {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.confirm-btns button {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+.confirm-btns button:active { transform: scale(0.95); }
+
+#confirm-yes {
+  background: var(--orange);
+  color: white;
+  box-shadow: 0 3px 0 var(--orange-dark);
+}
+#confirm-no {
+  background: #e0e0e0;
+  color: #444;
+  box-shadow: 0 3px 0 #b0b0b0;
+}

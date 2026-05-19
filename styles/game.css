@@ -1,0 +1,324 @@
+/* ═══════════════════════════════
+   PAGE 3: GAME SHELL
+═══════════════════════════════ */
+#page-game {
+  background: #1a0d00;
+  overflow: hidden;
+}
+
+#game-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 8px 8px 16px;
+  gap: 10px;
+}
+
+#game-inner::-webkit-scrollbar        { width: 4px; }
+#game-inner::-webkit-scrollbar-track  { background: transparent; }
+#game-inner::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+/* ═══════════════════════════════
+   HOME BUTTON
+═══════════════════════════════ */
+#home-btn {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s;
+}
+#home-btn.show { display: flex; }
+#home-btn:hover { background: rgba(255,255,255,0.28); }
+
+/* ═══════════════════════════════
+   GAME SECTIONS
+═══════════════════════════════ */
+#section-select,
+#section-play {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+#section-select.show,
+#section-play.show { display: flex; }
+
+/* ═══════════════════════════════
+   CARD GRID
+═══════════════════════════════ */
+.card-grid {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+}
+
+.grid-classic { grid-template-columns: repeat(6, 1fr); }
+.grid-clear   { grid-template-columns: repeat(8, 1fr); }
+.grid-zoom    { grid-template-columns: repeat(12, 1fr); }
+
+@media (max-width: 600px) {
+  .grid-classic { grid-template-columns: repeat(4, 1fr); }
+  .grid-clear   { grid-template-columns: repeat(4, 1fr); }
+  .grid-zoom    { grid-template-columns: repeat(6, 1fr); }
+}
+@media (max-width: 400px) {
+  .grid-classic { grid-template-columns: repeat(3, 1fr); }
+  .grid-clear   { grid-template-columns: repeat(3, 1fr); }
+  .grid-zoom    { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ═══════════════════════════════
+   CARD COMPONENT
+   Full card = 4:5 (image square + label 20%)
+═══════════════════════════════ */
+.card-wrap {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Image area = square = top 80% of the 4:5 card */
+.card-flip-container {
+  width: 100%;
+  height: 80%;
+  perspective: 600px;
+}
+
+.card-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-wrap.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-face,
+.card-back-face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  overflow: hidden;
+}
+
+.card-face img,
+.card-back-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-back-face {
+  transform: rotateY(180deg);
+}
+
+/* ── Label area (bottom 20%) ── */
+.card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 20%;
+  background: white;
+  border-radius: 0 0 var(--card-radius) var(--card-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 3px;
+  overflow: hidden;
+}
+
+.card-label span {
+  font-family: var(--font-main);
+  font-weight: 800;
+  font-size: clamp(0.45rem, 1.5vw, 0.75rem);
+  color: var(--text-dark);
+  text-align: center;
+  line-height: 1.1;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Selected state (selection screen) ── */
+.card-wrap.selected-card .card-label {
+  background: var(--gold);
+}
+
+/* ── Locked card in game ── */
+.card-wrap.locked .card-flip-container {
+  outline: 3px solid #1a0a00;
+  outline-offset: -3px;
+  border-radius: var(--card-radius) var(--card-radius) 0 0;
+}
+
+/* ═══════════════════════════════
+   DISCARD ANIMATIONS
+═══════════════════════════════ */
+@keyframes anim-cross {
+  0%   { opacity: 1; transform: scale(1); }
+  30%  { transform: scale(1.1); }
+  100% { opacity: 0; transform: scale(0.6) rotate(15deg); }
+}
+
+@keyframes anim-delete {
+  0%   { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(40px) scale(0.8); }
+}
+
+.anim-cross  { animation: anim-cross  0.4s ease forwards; }
+.anim-delete { animation: anim-delete 0.35s ease forwards; }
+
+/* ═══════════════════════════════
+   ANSWER SECTION (shared)
+═══════════════════════════════ */
+.answer-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0 4px;
+}
+
+/* ── Selection answer preview ── */
+.answer-box {
+  width: min(110px, 28vw);
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  border: 3px solid var(--gold);
+  overflow: hidden;
+  background: white;
+  box-shadow: var(--shadow);
+  position: relative;
+}
+
+.answer-box img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  display: block;
+}
+
+.answer-box-label {
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: var(--text-dark);
+  text-align: center;
+  padding: 0 4px;
+}
+
+.answer-box-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  font-size: 2rem;
+}
+
+/* ── Game answer box (secret card) ── */
+.game-answer-box {
+  width: min(110px, 28vw);
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius);
+  border: 3px solid var(--gold);
+  overflow: hidden;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+.game-answer-img {
+  width: 100%;
+  height: 80%;
+  object-fit: cover;
+  display: block;
+}
+
+.game-answer-label {
+  height: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.72rem;
+  color: var(--text-dark);
+  text-align: center;
+  padding: 0 4px;
+}
+
+.game-answer-cover {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #1a0a00, #3d1a00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+}
+
+/* ═══════════════════════════════
+   GAME CONTROLS (undo/refresh/lock)
+═══════════════════════════════ */
+.game-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.ctrl-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.1s;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.ctrl-btn:hover  { background: rgba(255,255,255,0.22); }
+.ctrl-btn:active { transform: scale(0.92); }
+.ctrl-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

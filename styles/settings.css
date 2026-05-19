@@ -1,0 +1,158 @@
+/* ═══════════════════════════════
+   SETTINGS BUTTON (fixed global)
+═══════════════════════════════ */
+#settings-btn {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 100;
+  width: 44px;
+  height: 44px;
+  background: rgba(255,255,255,0.18);
+  border: 2px solid rgba(255,255,255,0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s, transform 0.2s;
+}
+#settings-btn:hover {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.08) rotate(30deg);
+}
+
+/* ═══════════════════════════════
+   SETTINGS OVERLAY & PANEL
+═══════════════════════════════ */
+#settings-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+#settings-overlay.open { display: flex; }
+
+#settings-panel {
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 28px 24px;
+  width: min(380px, 92vw);
+  box-shadow: var(--shadow-heavy);
+  position: relative;
+}
+
+#settings-panel h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--orange);
+  margin-bottom: 22px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.settings-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #999;
+  line-height: 1;
+  transition: color 0.2s;
+}
+.settings-close:hover { color: var(--orange); }
+
+/* ═══════════════════════════════
+   SETTINGS ROWS
+═══════════════════════════════ */
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+}
+
+/* ═══════════════════════════════
+   TOGGLE SWITCH
+═══════════════════════════════ */
+.toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  cursor: pointer;
+}
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 28px;
+  transition: 0.3s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 4px;
+  top: 4px;
+  background: white;
+  border-radius: 50%;
+  transition: 0.3s;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-slider { background: var(--orange); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(24px); }
+
+/* ═══════════════════════════════
+   SEGMENTED CONTROL (settings)
+═══════════════════════════════ */
+.seg-control {
+  display: flex;
+  gap: 4px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.seg-btn {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-mid);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.seg-btn.active {
+  background: var(--orange);
+  color: white;
+  box-shadow: 0 2px 6px rgba(232,82,26,0.4);
+}
