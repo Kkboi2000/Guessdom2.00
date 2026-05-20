@@ -32,4 +32,7 @@ export default {
   yes: 'Yes',
   no: 'No',
   pickCharacter: 'Pick a card',
+  textSize: 'Text Size',
+  normal24: 'Normal (24)',
+  confirmRefresh: 'Are you sure? Locked cards will flip too.',
 };
