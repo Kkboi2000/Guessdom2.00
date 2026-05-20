@@ -32,7 +32,8 @@ export default {
   yes: 'ใช่',
   no: 'ไม่',
   pickCharacter: 'เลือกการ์ด',
-  textSize: '文字サイズ',
-  normal24: 'ノーマル (24)',
-  confirmRefresh: '本当によろしいですか? ロック済みのカードも裏返ります',
+  textSize: 'ขนาดตัวอักษร',
+  normal24: 'ปกติ (24)',
+  confirmRefresh: 'แน่ใจไหม? การ์ดที่ล็อกไว้จะถูกพลิกด้วย',
+};
 };
