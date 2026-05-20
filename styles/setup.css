@@ -1,119 +1,158 @@
-/* ═══════════════════════════════
-   PAGE 2: BOARD SETUP
-═══════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   setup.css — Guessdom 2 | board setup page
+   ───────────────────────────────────────────────────────────
+   Owns everything inside #page-setup:
+     • Centered card with title + segmented controls + Continue
+     • seg-3 (Amount: Mini / Normal / Big)
+     • seg-5 (Categories: People / Places / Foods / Animals / Activities)
+     • No truncation on 5-button row in EN/TH/JP
+   ═══════════════════════════════════════════════════════════ */
+
 #page-setup {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: none;
   align-items: center;
   justify-content: center;
-  background: #f5d4b0;
+  padding: 20px 16px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
+#page-setup.active { display: flex; }
 
-#setup-bg {
+#page-setup .page-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
 }
 
-/* ═══════════════════════════════
-   SETUP CARD (floating panel)
-═══════════════════════════════ */
+/* ─────────────────────────────────────────────
+   The white card
+───────────────────────────────────────────── */
 .setup-card {
   position: relative;
-  z-index: 2;
-  background: rgba(255,255,255,0.92);
+  z-index: 1;
+  background: #fff5e8;
   border-radius: 22px;
-  padding: 28px 24px 22px;
-  width: min(400px, 90vw);
-  box-shadow: var(--shadow-heavy);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  padding: 24px 22px 22px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-.setup-card h2 {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  color: var(--orange);
+.setup-title {
+  margin: 0;
   text-align: center;
-  margin-bottom: 22px;
-  letter-spacing: 0.5px;
+  font-size: 30px;
+  font-weight: 900;
+  color: #e8521a;
+  letter-spacing: 0.01em;
 }
 
-/* ═══════════════════════════════
-   SETUP FIELDS
-═══════════════════════════════ */
+/* ─────────────────────────────────────────────
+   One field group (label + segmented row)
+───────────────────────────────────────────── */
 .setup-field {
-  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .setup-field-label {
-  font-size: 0.78rem;
-  font-weight: 800;
-  color: var(--text-mid);
+  font-size: 13px;
+  font-weight: 700;
+  color: #b8552a;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
+  letter-spacing: 0.08em;
 }
 
-/* ═══════════════════════════════
-   SETUP SEGMENTED BUTTONS
-═══════════════════════════════ */
+/* ─────────────────────────────────────────────
+   Segmented controls
+   seg-3 → 3 equal columns
+   seg-5 → 5 equal columns (no truncation)
+───────────────────────────────────────────── */
 .setup-seg {
-  display: flex;
-  gap: 5px;
-  flex-wrap: wrap;
+  display: grid;
+  gap: 8px;
 }
+
+.setup-seg.seg-3 { grid-template-columns: repeat(3, 1fr); }
+.setup-seg.seg-5 { grid-template-columns: repeat(5, 1fr); gap: 6px; }
 
 .setup-seg-btn {
-  flex: 1;
-  min-width: 0;
-  padding: 10px 6px;
-  border-radius: 10px;
-  border: 2px solid #e0d4c8;
-  background: var(--cream);
-  font-family: var(--font-main);
-  font-size: 0.82rem;
+  border: none;
+  background: #fff;
+  color: #2a1810;
+  border-radius: 14px;
+  padding: 12px 6px;
+  font-size: 14px;
   font-weight: 700;
-  color: var(--text-mid);
+  font-family: inherit;
   cursor: pointer;
-  transition: all 0.2s;
   text-align: center;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+  min-width: 0;                       /* allow shrink inside grid */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.setup-seg-btn:active { transform: scale(0.97); }
 
 .setup-seg-btn.active {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: white;
-  box-shadow: 0 3px 10px rgba(232,82,26,0.35);
+  background: linear-gradient(180deg, #f06b2e 0%, #d4501a 100%);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(212, 80, 26, 0.4);
 }
 
-/* ═══════════════════════════════
-   CONTINUE BUTTON
-═══════════════════════════════ */
+/* 5-button row needs tighter typography */
+.setup-seg.seg-5 .setup-seg-btn {
+  padding: 12px 4px;
+  font-size: 13px;
+  letter-spacing: -0.01em;
+}
+
+/* Narrow phones: shrink the 5-button font further */
+@media (max-width: 420px) {
+  .setup-seg.seg-5 .setup-seg-btn {
+    font-size: 11px;
+    padding: 11px 2px;
+    border-radius: 12px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Continue button (full width, orange pill)
+───────────────────────────────────────────── */
 #continue-btn {
-  width: 100%;
-  margin-top: 22px;
-  padding: 14px;
-  background: linear-gradient(145deg, var(--orange-light), var(--orange));
+  margin-top: 4px;
   border: none;
-  border-radius: 50px;
-  font-family: var(--font-display);
-  font-size: 1.2rem;
-  color: white;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f06b2e 0%, #d4501a 100%);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 800;
+  font-family: inherit;
+  padding: 16px 20px;
   cursor: pointer;
-  box-shadow:
-    0 4px 0 var(--orange-dark),
-    0 8px 20px rgba(232,82,26,0.4);
-  transition: transform 0.1s, box-shadow 0.1s;
-  letter-spacing: 0.5px;
+  box-shadow: 0 6px 14px rgba(212, 80, 26, 0.4);
+  letter-spacing: 0.02em;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #continue-btn:active {
-  transform: translateY(3px);
-  box-shadow:
-    0 1px 0 var(--orange-dark),
-    0 3px 10px rgba(232,82,26,0.3);
+  transform: translateY(1px);
+  box-shadow: 0 3px 8px rgba(212, 80, 26, 0.35);
 }
