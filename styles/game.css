@@ -44,14 +44,22 @@
 #section-select.show,
 #section-play.show { display: flex; }
 
-/* ─── Card grid ─────────────────────────── */
+/* ─── Card grid ─────────────────────────────
+   The grid is given a max-width on desktop so cards don't
+   sprawl. grid-auto-rows uses min-content so the aspect
+   ratio of .card-wrap determines row height, not the
+   available container space.
+───────────────────────────────────────────── */
 .card-grid {
   display: grid;
   gap: 8px;
   width: 100%;
+  max-width: 720px;          /* keeps cards reasonable on big desktop */
+  margin: 0 auto;            /* centers the grid */
   padding: 6px 2px;
   align-content: start;
-  flex: 1;
+  grid-auto-rows: min-content;
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -62,9 +70,15 @@
 .card-grid:has(> :nth-child(24):last-child) { --cols: 4; }
 .card-grid:has(> :nth-child(36):last-child) { --cols: 6; }
 
+/* Small phones — Big (36) gets squished, drop to 4 cols */
 @media (max-width: 480px) {
   .card-grid:has(> :nth-child(36):last-child) { --cols: 4; }
   .card-grid { gap: 6px; }
+}
+
+/* Wide desktop — bigger gap, the max-width above caps sprawl */
+@media (min-width: 900px) {
+  .card-grid { gap: 12px; padding: 12px 4px; }
 }
 
 /* ─── Card wrapper ──────────────────────── */
