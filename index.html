@@ -77,9 +77,9 @@
       </div>
     </div>
 
-    <!-- Description size (fix #8) -->
+    <!-- Text size — controls label font size (FIX #1) -->
     <div class="settings-row">
-      <span class="settings-label" data-i18n="descSize">Desc Size</span>
+      <span class="settings-label" data-i18n="textSize">Text Size</span>
       <div class="seg-control" id="desc-seg">
         <button class="seg-btn" data-val="small"  data-i18n="small">S</button>
         <button class="seg-btn" data-val="normal" data-i18n="normal">M</button>
@@ -87,7 +87,6 @@
       </div>
     </div>
 
-    <!-- Credit (fix #11) -->
     <p class="settings-credit">Krit's vibe coding ✦ Guessdom 2</p>
   </div>
 </div>
@@ -96,7 +95,6 @@
      PAGE 1: MAIN MENU
 ════════════════════════════════════════════ -->
 <div id="page-menu" class="page active">
-  <!-- portrait src is default; JS/CSS swaps to landscape on wide screens -->
   <img id="menu-bg"
        src="assets/backgrounds/menu-portrait.gif"
        data-portrait="assets/backgrounds/menu-portrait.gif"
@@ -107,6 +105,8 @@
 
 <!-- ═══════════════════════════════════════════
      PAGE 2: BOARD SETUP
+     FIX #3 — removed Size (Classic/Clear/Zoom) row.
+     Layout is now fixed to "classic" internally.
 ════════════════════════════════════════════ -->
 <div id="page-setup" class="page">
   <img id="setup-bg"
@@ -116,30 +116,21 @@
        class="page-bg responsive-bg" alt="" />
 
   <div class="setup-card">
-    <!-- i18n title (fix #2) -->
     <h2 class="setup-title" data-i18n="boardSetup">Board Setup</h2>
 
     <div class="setup-field">
-      <div class="setup-field-label" data-i18n="size">Size</div>
-      <div class="setup-seg" id="size-seg">
-        <button class="setup-seg-btn active" data-val="classic" data-i18n="classic">Classic</button>
-        <button class="setup-seg-btn"        data-val="clear"   data-i18n="clear">Clear</button>
-        <button class="setup-seg-btn"        data-val="zoom"    data-i18n="zoom">Zoom</button>
-      </div>
-    </div>
-
-    <div class="setup-field">
       <div class="setup-field-label" data-i18n="amount">Amount</div>
-      <div class="setup-seg" id="amount-seg">
+      <div class="setup-seg seg-3" id="amount-seg">
         <button class="setup-seg-btn"        data-val="mini"   data-i18n="mini">Mini (12)</button>
-        <button class="setup-seg-btn active" data-val="normal" data-i18n="normal">Normal (24)</button>
+        <button class="setup-seg-btn active" data-val="normal" data-i18n="normal24">Normal (24)</button>
         <button class="setup-seg-btn"        data-val="big"    data-i18n="big">Big (36)</button>
       </div>
     </div>
 
     <div class="setup-field">
       <div class="setup-field-label" data-i18n="categories">Categories</div>
-      <div class="setup-seg" id="cat-seg">
+      <!-- FIX #2 — seg-5 ensures 5 buttons share space with no truncation -->
+      <div class="setup-seg seg-5" id="cat-seg">
         <button class="setup-seg-btn active" data-val="people"     data-i18n="people">People</button>
         <button class="setup-seg-btn"        data-val="places"     data-i18n="places">Places</button>
         <button class="setup-seg-btn"        data-val="foods"      data-i18n="foods">Foods</button>
@@ -157,7 +148,6 @@
 ════════════════════════════════════════════ -->
 <div id="page-game" class="page">
 
-  <!-- Game background (fix #6) -->
   <img id="game-bg"
        src="assets/backgrounds/game-portrait.gif"
        data-portrait="assets/backgrounds/game-portrait.gif"
@@ -204,7 +194,7 @@
      GLOBAL OVERLAYS
 ════════════════════════════════════════════ -->
 
-<!-- Home button (fix #4) — shown only during gameplay via JS class on body -->
+<!-- Home button — FIX #5: now visible on BOTH select & play sections -->
 <button id="home-btn" aria-label="Home">
   <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
        fill="none" stroke="currentColor" stroke-width="1.8"
@@ -214,7 +204,7 @@
   </svg>
 </button>
 
-<!-- Tips button (fix #5) -->
+<!-- Tips button -->
 <button id="tips-btn" aria-label="Tips">?</button>
 <div id="tips-panel">
   <p data-i18n="tip1">Tap a card to flip it face-down when eliminated.</p>
@@ -261,7 +251,6 @@
   }
   swapBgs();
   window.addEventListener('resize', swapBgs);
-  // also expose for page transitions
   window.__swapBgs = swapBgs;
 </script>
 
