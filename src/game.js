@@ -1,14 +1,20 @@
 /**
  * game.js — Core game logic & state
- * Handles: card state, history/undo, lock, refresh,
- *          image selection, discard animations.
- * Pure logic — no direct DOM manipulation.
- * Communicates with ui.js and audio.js via imported functions.
+ *
+ * FIX #6 — Discard animations rewritten:
+ *   • cross   → overlay X + grayscale; card stays in place (NOT flipped)
+ *   • delete  → card collapses out of the grid entirely (slot disappears)
+ *   • flip    → default flip (unchanged)
+ *
+ * FIX #7 — lockFlipped() now calls playLock() so user gets audio feedback.
+ *
+ * History tracks "eliminated" state generically: a card may be eliminated
+ * via flip OR cross OR delete. Undo restores them all.
  */
 
 import { cards }        from './data/cards.js';
 import { loadSettings } from './settings.js';
-import { playFlip }     from './audio.js';
+import { playFlip, playLock } from './audio.js';
 import {
   renderSelectGrid,
   renderPlayGrid,
@@ -27,10 +33,10 @@ import {
 let currentLayout    = 'classic';
 let currentAmount    = 'normal';
 let currentCategory  = 'people';
-let currentImages    = [];   // array of card data objects for current game
-let selectedIdx      = null; // index into currentImages for the secret card
-let gameCards        = [];   // array of card DOM elements (play grid)
-let history          = [];   // array of state snapshots
+let currentImages    = [];
+let selectedIdx      = null;
+let gameCards        = [];   // DOM card-wrap elements (play grid)
+let history          = [];
 let historyIdx       = -1;
 let isAnswerRevealed = false;
 
@@ -41,15 +47,14 @@ export function buildImages(category, amount) {
   const all = cards[category] || [];
   if (amount === 'mini')   return all.slice(0, 12);
   if (amount === 'normal') return all.slice(0, 24);
-  // 'big' — shuffle full 36
   return [...all].sort(() => Math.random() - 0.5);
 }
 
 // ─────────────────────────────────────────────
-// SETUP — called when user hits Continue
+// SETUP
 // ─────────────────────────────────────────────
 export function setupGame(layout, amount, category) {
-  currentLayout   = layout;
+  currentLayout   = layout || 'classic';
   currentAmount   = amount;
   currentCategory = category;
   currentImages   = buildImages(category, amount);
@@ -57,10 +62,10 @@ export function setupGame(layout, amount, category) {
   isAnswerRevealed = false;
 }
 
-export function getCategory()    { return currentCategory; }
-export function getLayout()      { return currentLayout; }
+export function getCategory()      { return currentCategory; }
+export function getLayout()        { return currentLayout; }
 export function getCurrentImages() { return currentImages; }
-export function getSelectedIdx() { return selectedIdx; }
+export function getSelectedIdx()   { return selectedIdx; }
 
 // ─────────────────────────────────────────────
 // SELECTION SCREEN
@@ -81,7 +86,6 @@ export function selectRandom() {
   const idx = Math.floor(Math.random() * currentImages.length);
   selectedIdx = idx;
 
-  // Highlight the card in the grid
   const grid = document.getElementById('select-grid');
   grid?.querySelectorAll('.card-wrap').forEach((c, i) => {
     c.classList.toggle('selected-card', i === idx);
@@ -96,7 +100,7 @@ export function selectRandom() {
 // PLAY SCREEN
 // ─────────────────────────────────────────────
 export function initPlayScreen() {
-  history   = [];
+  history    = [];
   historyIdx = -1;
   isAnswerRevealed = false;
 
@@ -116,40 +120,81 @@ export function initPlayScreen() {
 }
 
 // ─────────────────────────────────────────────
-// CARD CLICK (in-game)
+// CARD CLICK — FIX #6
 // ─────────────────────────────────────────────
 function handleCardClick(wrap) {
+  if (wrap.classList.contains('locked')) return;
+  // Once "deleted", a card cannot be re-clicked (it's gone from the layout).
+  if (wrap.classList.contains('deleted')) return;
+
   const animType = loadSettings().discardAnim;
 
-  if (animType === 'cross' || animType === 'delete') {
-    const cls = animType === 'cross' ? 'anim-cross' : 'anim-delete';
-    wrap.classList.add(cls);
-    setTimeout(() => {
-      wrap.classList.remove(cls);
-      wrap.classList.toggle('flipped');
-      saveHistory();
-      playFlip();
-    }, 380);
-  } else {
-    // 'flip' — default CSS transition
-    wrap.classList.toggle('flipped');
+  // Toggle behavior: if already eliminated, clicking restores.
+  const isEliminated = wrap.classList.contains('flipped')
+                    || wrap.classList.contains('crossed');
+
+  if (isEliminated) {
+    wrap.classList.remove('flipped', 'crossed');
     saveHistory();
     playFlip();
+    return;
   }
+
+  if (animType === 'cross') {
+    // Add X overlay + grayscale. No flip.
+    wrap.classList.add('crossed');
+    saveHistory();
+    playFlip();
+    return;
+  }
+
+  if (animType === 'delete') {
+    // Animate out, then collapse the slot so it disappears from the grid.
+    wrap.classList.add('deleting');
+    // After the shrink animation, mark as fully deleted (display:none).
+    const onEnd = () => {
+      wrap.classList.remove('deleting');
+      wrap.classList.add('deleted');
+      saveHistory();
+    };
+    wrap.addEventListener('animationend', onEnd, { once: true });
+    // Safety fallback
+    setTimeout(onEnd, 500);
+    playFlip();
+    return;
+  }
+
+  // Default: flip
+  wrap.classList.add('flipped');
+  saveHistory();
+  playFlip();
 }
 
 // ─────────────────────────────────────────────
 // HISTORY
 // ─────────────────────────────────────────────
+function snapshot() {
+  return gameCards.map(c => ({
+    flipped: c.classList.contains('flipped'),
+    crossed: c.classList.contains('crossed'),
+    deleted: c.classList.contains('deleted'),
+    locked:  c.classList.contains('locked'),
+  }));
+}
+
+function applySnapshot(snap) {
+  gameCards.forEach((c, i) => {
+    const s = snap[i];
+    c.classList.toggle('flipped', s.flipped);
+    c.classList.toggle('crossed', s.crossed);
+    c.classList.toggle('deleted', s.deleted);
+    c.classList.toggle('locked',  s.locked);
+  });
+}
+
 function saveHistory() {
-  // Discard any redo states beyond current index
   history = history.slice(0, historyIdx + 1);
-  history.push(
-    gameCards.map(c => ({
-      flipped: c.classList.contains('flipped'),
-      locked:  c.classList.contains('locked'),
-    }))
-  );
+  history.push(snapshot());
   historyIdx = history.length - 1;
   setUndoBtnState(historyIdx > 0);
 }
@@ -158,26 +203,34 @@ function saveHistory() {
 // CONTROLS
 // ─────────────────────────────────────────────
 
-/** Undo: flip all unlocked cards face-up (back to unflipped) */
+/** Undo: restore every UNLOCKED card to face-up (un-eliminated). */
 export function undoFlips() {
   gameCards.forEach(c => {
-    if (!c.classList.contains('locked')) c.classList.remove('flipped');
+    if (!c.classList.contains('locked')) {
+      c.classList.remove('flipped', 'crossed', 'deleted');
+    }
   });
   saveHistory();
   playFlip();
 }
 
-/** Lock: lock all currently flipped cards */
+/** Lock: lock all currently flipped/crossed/deleted cards. */
 export function lockFlipped() {
   gameCards.forEach(c => {
-    if (c.classList.contains('flipped')) c.classList.add('locked');
+    const eliminated = c.classList.contains('flipped')
+                    || c.classList.contains('crossed')
+                    || c.classList.contains('deleted');
+    if (eliminated) c.classList.add('locked');
   });
   saveHistory();
+  playLock();   // FIX #7
 }
 
-/** Reset: unflip and unlock all cards */
+/** Reset: clear everything including locks. */
 export function resetBoard() {
-  gameCards.forEach(c => c.classList.remove('flipped', 'locked'));
+  gameCards.forEach(c => {
+    c.classList.remove('flipped', 'crossed', 'deleted', 'locked');
+  });
   saveHistory();
   playFlip();
 }
@@ -191,7 +244,7 @@ export function toggleAnswer() {
 }
 
 // ─────────────────────────────────────────────
-// RESET ALL STATE (on home)
+// FULL RESET (home button)
 // ─────────────────────────────────────────────
 export function fullReset() {
   selectedIdx      = null;
