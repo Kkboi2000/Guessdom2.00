@@ -27,7 +27,6 @@ import {
 
 import {
   unlockAudio,
-  playFlip,
   startMusic,
   stopMusic,
   syncMusic,
@@ -130,7 +129,6 @@ document.querySelectorAll('#desc-seg .seg-btn').forEach(btn => {
     applyDescSize(settings.descSize);
   });
 });
-// Set initial active state for desc-seg
 document.querySelectorAll('#desc-seg .seg-btn').forEach(b => {
   b.classList.toggle('active', b.dataset.val === settings.descSize);
 });
@@ -165,7 +163,7 @@ document.getElementById('continue-btn').addEventListener('click', () => {
   setupGame(chosenSize, chosenAmount, chosenCategory);
   showPage('game');
   showSection('select');
-  setGameUI(false);       // home/tips hidden during selection
+  setGameUI(false);
   initSelectScreen();
   window.__swapBgs?.();
 });
@@ -180,7 +178,7 @@ document.getElementById('random-btn').addEventListener('click', () => {
 document.getElementById('save-btn').addEventListener('click', () => {
   playStartAnimation(() => {
     showSection('play');
-    setGameUI(true);      // show home + tips
+    setGameUI(true);
     initPlayScreen();
     startMusic();
     window.__swapBgs?.();
@@ -202,7 +200,6 @@ document.getElementById('lock-btn').addEventListener('click', () => {
   lockFlipped();
 });
 
-// Answer box reveal
 document.getElementById('game-answer-box').addEventListener('click', () => {
   toggleAnswer();
 });
@@ -238,6 +235,10 @@ let _confirmAction = null;  // 'refresh' | 'home'
 function openConfirm(action) {
   _confirmAction = action;
   document.getElementById('confirm-overlay').classList.add('show');
+}
+
+function closeConfirm() {
+  document.getElementById('confirm-overlay').classList.remove('show');
 }
 
 document.getElementById('confirm-yes').addEventListener('click', () => {
