@@ -4,7 +4,7 @@
    Bump CACHE_VERSION on every deploy to force refresh
 ════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'guessdom2-v2';
+const CACHE_VERSION = 'guessdom2-v3';
 const BASE = '/guessdom2.0';
 
 const PRECACHE = [
