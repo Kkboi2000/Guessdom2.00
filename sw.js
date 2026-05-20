@@ -46,23 +46,27 @@ const PRECACHE = [
   /* ── Card back ── */
   `${BASE}/assets/cards/back.webp`,
 
-  /* ── Sounds ── */
+  /* ── Sounds (uncomment when files exist) ── */
   // `${BASE}/assets/sounds/flip.mp3`,
   // `${BASE}/assets/sounds/lock.mp3`,
   // `${BASE}/assets/sounds/reveal.mp3`,
 
-  /* ── BGM ── */
+  /* ── BGM (uncomment when file exists) ── */
   // `${BASE}/assets/music/bgm.mp3`,
 ];
 
 /* ─────────────────────────────────────────
    INSTALL — precache everything above
+   Uses allSettled so a single 404 won't
+   abort the entire install
 ──────────────────────────────────────────── */
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_VERSION)
-      .then(cache => cache.addAll(PRECACHE))
-      .then(() => self.skipWaiting())   // activate immediately
+      .then(cache =>
+        Promise.allSettled(PRECACHE.map(url => cache.add(url)))
+      )
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -74,10 +78,10 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key !== CACHE_VERSION)
+          .filter(key => key !== CACHE_VERSION && key !== CARD_CACHE)
           .map(key => caches.delete(key))
       )
-    ).then(() => self.clients.claim())  // take control without reload
+    ).then(() => self.clients.claim())
   );
 });
 
@@ -105,7 +109,6 @@ self.addEventListener('fetch', event => {
     caches.match(event.request).then(cached => {
       if (cached) return cached;
       return fetch(event.request).then(response => {
-        // Cache successful GET responses
         if (event.request.method === 'GET' && response.status === 200) {
           caches.open(CACHE_VERSION).then(cache => cache.put(event.request, response.clone()));
         }
