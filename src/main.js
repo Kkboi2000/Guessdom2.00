@@ -21,8 +21,6 @@ import {
   showSection,
   refreshSettingsUI,
   playStartAnimation,
-  openConfirm,
-  closeConfirm,
   showSaveBtn,
   t,
 } from './ui.js';
