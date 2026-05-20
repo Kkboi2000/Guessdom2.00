@@ -18,22 +18,4 @@ export default {
   clear: 'ชัดเจน',
   zoom: 'ซูม',
   mini: 'มินิ (12)',
-  normal: 'ปกติ (24)',
-  big: 'ใหญ่ (36)',
-  people: 'คน',
-  places: 'สถานที่',
-  foods: 'อาหาร',
-  animals: 'สัตว์',
-  activities: 'กิจกรรม',
-  continue: 'ถัดไป',
-  random: 'สุ่ม',
-  save: 'บันทึก',
-  confirmMsg: 'แน่ใจหรือไม่? การ์ดที่ล็อกไว้จะพลิกด้วย',
-  yes: 'ใช่',
-  no: 'ไม่',
-  pickCharacter: 'เลือกการ์ด',
-  textSize: 'ขนาดตัวอักษร',
-  normal24: 'ปกติ (24)',
-  confirmRefresh: 'แน่ใจไหม? การ์ดที่ล็อกไว้จะถูกพลิกด้วย',
-};
-};
+  n
