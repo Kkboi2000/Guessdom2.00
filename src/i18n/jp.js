@@ -36,4 +36,3 @@ export default {
   normal24: 'ノーマル (24)',
   confirmRefresh: '本当によろしいですか? ロック済みのカードも裏返ります',
 };
-};
