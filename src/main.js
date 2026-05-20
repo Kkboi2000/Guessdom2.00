@@ -1,6 +1,10 @@
 /**
  * main.js — Entry point for Guessdom 2
- * Wires: settings, i18n, audio, game logic, UI, page nav
+ *
+ * Changes vs original:
+ *  • Size (Classic/Clear/Zoom) row removed from setup → layout is fixed to 'classic'.
+ *  • descSize seg wired through applyDescSize() to set font size in pt.
+ *  • Home button confirm flow works from both select and play sections.
  */
 
 import en from './i18n/en.js';
@@ -44,9 +48,7 @@ import {
   fullReset,
 } from './game.js';
 
-// ─────────────────────────────────────────────
-// BOOT
-// ─────────────────────────────────────────────
+// ── BOOT ──────────────────────────────────────────────
 registerStrings(en, th, jp);
 
 const settings = loadSettings();
@@ -56,21 +58,16 @@ applyDescSize(settings.descSize);
 refreshSettingsUI();
 syncMusic();
 
-// ─────────────────────────────────────────────
-// SETUP STATE
-// ─────────────────────────────────────────────
-let chosenSize     = 'classic';
+// ── SETUP STATE ───────────────────────────────────────
+// Layout is fixed to 'classic' now (the Size row was removed).
+const FIXED_LAYOUT = 'classic';
 let chosenAmount   = 'normal';
 let chosenCategory = 'people';
 
-// ─────────────────────────────────────────────
-// USER GESTURE GATE (iOS audio unlock)
-// ─────────────────────────────────────────────
+// ── iOS audio unlock ──────────────────────────────────
 document.addEventListener('pointerdown', unlockAudio, { once: true, passive: true });
 
-// ─────────────────────────────────────────────
-// SETTINGS PANEL
-// ─────────────────────────────────────────────
+// ── SETTINGS PANEL ────────────────────────────────────
 const settingsBtn     = document.getElementById('settings-btn');
 const settingsOverlay = document.getElementById('settings-overlay');
 const settingsClose   = document.getElementById('settings-close');
@@ -84,20 +81,17 @@ settingsOverlay.addEventListener('click', e => {
   if (e.target === settingsOverlay) settingsOverlay.classList.remove('open');
 });
 
-// Sound toggle
 document.getElementById('toggle-sound').addEventListener('change', e => {
   settings.sound = e.target.checked;
   saveSettings(settings);
 });
 
-// Music toggle
 document.getElementById('toggle-music').addEventListener('change', e => {
   settings.music = e.target.checked;
   saveSettings(settings);
   syncMusic();
 });
 
-// Language seg
 document.querySelectorAll('#lang-seg .seg-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#lang-seg .seg-btn').forEach(b => b.classList.remove('active'));
@@ -109,7 +103,6 @@ document.querySelectorAll('#lang-seg .seg-btn').forEach(btn => {
   });
 });
 
-// Discard anim seg
 document.querySelectorAll('#anim-seg .seg-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#anim-seg .seg-btn').forEach(b => b.classList.remove('active'));
@@ -119,7 +112,6 @@ document.querySelectorAll('#anim-seg .seg-btn').forEach(btn => {
   });
 });
 
-// Desc size seg
 document.querySelectorAll('#desc-seg .seg-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('#desc-seg .seg-btn').forEach(b => b.classList.remove('active'));
@@ -129,21 +121,14 @@ document.querySelectorAll('#desc-seg .seg-btn').forEach(btn => {
     applyDescSize(settings.descSize);
   });
 });
-document.querySelectorAll('#desc-seg .seg-btn').forEach(b => {
-  b.classList.toggle('active', b.dataset.val === settings.descSize);
-});
 
-// ─────────────────────────────────────────────
-// PAGE 1: MENU
-// ─────────────────────────────────────────────
+// ── PAGE 1: MENU ──────────────────────────────────────
 document.getElementById('start-btn').addEventListener('click', () => {
   showPage('setup');
   window.__swapBgs?.();
 });
 
-// ─────────────────────────────────────────────
-// PAGE 2: BOARD SETUP — seg buttons
-// ─────────────────────────────────────────────
+// ── PAGE 2: BOARD SETUP ───────────────────────────────
 function wireSetupSeg(segId, onChange) {
   document.querySelectorAll(`#${segId} .setup-seg-btn`).forEach(btn => {
     btn.addEventListener('click', () => {
@@ -155,22 +140,19 @@ function wireSetupSeg(segId, onChange) {
   });
 }
 
-wireSetupSeg('size-seg',   val => { chosenSize     = val; });
 wireSetupSeg('amount-seg', val => { chosenAmount   = val; });
 wireSetupSeg('cat-seg',    val => { chosenCategory = val; });
 
 document.getElementById('continue-btn').addEventListener('click', () => {
-  setupGame(chosenSize, chosenAmount, chosenCategory);
+  setupGame(FIXED_LAYOUT, chosenAmount, chosenCategory);
   showPage('game');
   showSection('select');
-  setGameUI(false);
+  setGameUI(true);              // home button visible from select screen now
   initSelectScreen();
   window.__swapBgs?.();
 });
 
-// ─────────────────────────────────────────────
-// PAGE 3: GAME — selection screen
-// ─────────────────────────────────────────────
+// ── PAGE 3: SELECT SCREEN ─────────────────────────────
 document.getElementById('random-btn').addEventListener('click', () => {
   selectRandom();
 });
@@ -185,38 +167,18 @@ document.getElementById('save-btn').addEventListener('click', () => {
   });
 });
 
-// ─────────────────────────────────────────────
-// PAGE 3: GAME — play controls
-// ─────────────────────────────────────────────
-document.getElementById('undo-btn').addEventListener('click', () => {
-  undoFlips();
-});
+// ── PAGE 3: PLAY CONTROLS ─────────────────────────────
+document.getElementById('undo-btn').addEventListener('click', () => undoFlips());
+document.getElementById('refresh-btn').addEventListener('click', () => openConfirm('refresh'));
+document.getElementById('lock-btn').addEventListener('click', () => lockFlipped());
+document.getElementById('game-answer-box').addEventListener('click', () => toggleAnswer());
 
-document.getElementById('refresh-btn').addEventListener('click', () => {
-  openConfirm('refresh');
-});
+// ── HOME BUTTON ───────────────────────────────────────
+document.getElementById('home-btn').addEventListener('click', () => openConfirm('home'));
 
-document.getElementById('lock-btn').addEventListener('click', () => {
-  lockFlipped();
-});
-
-document.getElementById('game-answer-box').addEventListener('click', () => {
-  toggleAnswer();
-});
-
-// ─────────────────────────────────────────────
-// HOME BUTTON
-// ─────────────────────────────────────────────
-document.getElementById('home-btn').addEventListener('click', () => {
-  openConfirm('home');
-});
-
-// ─────────────────────────────────────────────
-// TIPS BUTTON
-// ─────────────────────────────────────────────
+// ── TIPS BUTTON ───────────────────────────────────────
 const tipsBtn   = document.getElementById('tips-btn');
 const tipsPanel = document.getElementById('tips-panel');
-
 tipsBtn.addEventListener('click', e => {
   e.stopPropagation();
   tipsPanel.classList.toggle('open');
@@ -227,10 +189,8 @@ document.addEventListener('click', e => {
   }
 });
 
-// ─────────────────────────────────────────────
-// CONFIRM POPUP
-// ─────────────────────────────────────────────
-let _confirmAction = null;  // 'refresh' | 'home'
+// ── CONFIRM POPUP ─────────────────────────────────────
+let _confirmAction = null;
 
 function openConfirm(action) {
   _confirmAction = action;
@@ -265,9 +225,6 @@ function goHome() {
   window.__swapBgs?.();
 }
 
-// ─────────────────────────────────────────────
-// GAME UI VISIBILITY (home btn + tips)
-// ─────────────────────────────────────────────
 function setGameUI(active) {
   document.body.classList.toggle('in-game', active);
 }
