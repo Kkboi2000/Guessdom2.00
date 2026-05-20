@@ -1,49 +1,38 @@
 /* ═══════════════════════════════════════════════════════════
    setup.css — Guessdom 2 | board setup page
-   ───────────────────────────────────────────────────────────
-   Owns everything inside #page-setup:
-     • Centered card with title + segmented controls + Continue
-     • seg-3 (Amount: Mini / Normal / Big)
-     • seg-5 (Categories: People / Places / Foods / Animals / Activities)
-     • No truncation on 5-button row in EN/TH/JP
+   ─────────────────────────────────────────────────────────
+   Does NOT redefine .page rules. base.css owns them.
    ═══════════════════════════════════════════════════════════ */
 
 #page-setup {
-  position: relative;
-  width: 100%;
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: none;
+  background: #1a0a00;
   align-items: center;
   justify-content: center;
   padding: 20px 16px;
-  box-sizing: border-box;
-  overflow: hidden;
+  position: relative;
 }
-#page-setup.active { display: flex; }
 
-#page-setup .page-bg {
+#setup-bg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   z-index: 0;
   pointer-events: none;
 }
 
-/* ─────────────────────────────────────────────
-   The white card
-───────────────────────────────────────────── */
+/* ─── Card ──────────────────────────────── */
 .setup-card {
   position: relative;
   z-index: 1;
-  background: #fff5e8;
+  background: var(--cream);
   border-radius: 22px;
   padding: 24px 22px 22px;
   width: 100%;
   max-width: 480px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  box-shadow: var(--shadow-heavy);
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -52,15 +41,13 @@
 .setup-title {
   margin: 0;
   text-align: center;
-  font-size: 30px;
-  font-weight: 900;
-  color: #e8521a;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  color: var(--orange);
   letter-spacing: 0.01em;
 }
 
-/* ─────────────────────────────────────────────
-   One field group (label + segmented row)
-───────────────────────────────────────────── */
+/* ─── Field group ───────────────────────── */
 .setup-field {
   display: flex;
   flex-direction: column;
@@ -68,91 +55,80 @@
 }
 
 .setup-field-label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #b8552a;
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-mid);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
-/* ─────────────────────────────────────────────
-   Segmented controls
-   seg-3 → 3 equal columns
-   seg-5 → 5 equal columns (no truncation)
-───────────────────────────────────────────── */
+/* ─── Segmented control ─────────────────── */
 .setup-seg {
   display: grid;
   gap: 8px;
 }
-
 .setup-seg.seg-3 { grid-template-columns: repeat(3, 1fr); }
 .setup-seg.seg-5 { grid-template-columns: repeat(5, 1fr); gap: 6px; }
 
 .setup-seg-btn {
   border: none;
   background: #fff;
-  color: #2a1810;
+  color: var(--text-dark);
   border-radius: 14px;
   padding: 12px 6px;
-  font-size: 14px;
+  font-family: var(--font-main);
+  font-size: 0.9rem;
   font-weight: 700;
-  font-family: inherit;
   cursor: pointer;
   text-align: center;
   transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
-  min-width: 0;                       /* allow shrink inside grid */
+  min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-tap-highlight-color: transparent;
 }
-
 .setup-seg-btn:active { transform: scale(0.97); }
-
 .setup-seg-btn.active {
-  background: linear-gradient(180deg, #f06b2e 0%, #d4501a 100%);
+  background: linear-gradient(180deg, var(--orange-light), var(--orange));
   color: #fff;
-  box-shadow: 0 2px 6px rgba(212, 80, 26, 0.4);
+  box-shadow: 0 2px 6px rgba(232, 82, 26, 0.4);
 }
 
-/* 5-button row needs tighter typography */
+/* 5-button row uses tighter typography */
 .setup-seg.seg-5 .setup-seg-btn {
   padding: 12px 4px;
-  font-size: 13px;
+  font-size: 0.82rem;
   letter-spacing: -0.01em;
 }
 
-/* Narrow phones: shrink the 5-button font further */
 @media (max-width: 420px) {
   .setup-seg.seg-5 .setup-seg-btn {
-    font-size: 11px;
+    font-size: 0.7rem;
     padding: 11px 2px;
     border-radius: 12px;
   }
 }
 
-/* ─────────────────────────────────────────────
-   Continue button (full width, orange pill)
-───────────────────────────────────────────── */
+/* ─── Continue button ───────────────────── */
 #continue-btn {
   margin-top: 4px;
   border: none;
   border-radius: 999px;
-  background: linear-gradient(180deg, #f06b2e 0%, #d4501a 100%);
+  background: linear-gradient(180deg, var(--orange-light), var(--orange));
   color: #fff;
-  font-size: 18px;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
   font-weight: 800;
-  font-family: inherit;
   padding: 16px 20px;
   cursor: pointer;
-  box-shadow: 0 6px 14px rgba(212, 80, 26, 0.4);
-  letter-spacing: 0.02em;
+  box-shadow: 0 4px 0 var(--orange-dark), 0 6px 14px rgba(212, 80, 26, 0.4);
+  letter-spacing: 0.04em;
   transition: transform 0.1s ease, box-shadow 0.1s ease;
   -webkit-tap-highlight-color: transparent;
 }
-
 #continue-btn:active {
-  transform: translateY(1px);
-  box-shadow: 0 3px 8px rgba(212, 80, 26, 0.35);
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 var(--orange-dark), 0 3px 8px rgba(212, 80, 26, 0.35);
 }
