@@ -4,7 +4,7 @@
    Bump CACHE_VERSION on every deploy to force refresh
 ════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'guessdom2-v1';
+const CACHE_VERSION = 'guessdom2-v2';
 const BASE = '/guessdom2.0';
 
 const PRECACHE = [
@@ -47,12 +47,12 @@ const PRECACHE = [
   `${BASE}/assets/cards/back.webp`,
 
   /* ── Sounds ── */
-  `${BASE}/assets/sounds/flip.mp3`,
-  `${BASE}/assets/sounds/lock.mp3`,
-  `${BASE}/assets/sounds/reveal.mp3`,
+  // `${BASE}/assets/sounds/flip.mp3`,
+  // `${BASE}/assets/sounds/lock.mp3`,
+  // `${BASE}/assets/sounds/reveal.mp3`,
 
   /* ── BGM ── */
-  `${BASE}/assets/music/bgm.mp3`,
+  // `${BASE}/assets/music/bgm.mp3`,
 ];
 
 /* ─────────────────────────────────────────
