@@ -32,4 +32,7 @@ export default {
   yes: 'はい',
   no: 'いいえ',
   pickCharacter: 'カードを選ぶ',
+  textSize: 'ขนาดตัวอักษร',
+  normal24: 'ปกติ (24)',
+  confirmRefresh: 'แน่ใจไหม? การ์ดที่ล็อกไว้จะถูกพลิกด้วย',
 };
