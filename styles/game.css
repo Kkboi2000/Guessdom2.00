@@ -66,13 +66,29 @@
   grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
 }
 
-.card-grid:has(> :nth-child(12):last-child) { --cols: 3; }
-.card-grid:has(> :nth-child(24):last-child) { --cols: 4; }
-.card-grid:has(> :nth-child(36):last-child) { --cols: 6; }
+/* ─── Card grid columns: data-amount + orientation ───
+   Replaces the old :has(:nth-child) child-count logic.
+   The amount is stamped onto the grid by ui.js at render
+   time, so column count is driven by intent (mini/normal/big)
+   instead of by counting children, and the landscape rules
+   fire whenever width > height — covering both rotated
+   phones and desktop browsers in one rule.
+───────────────────────────────────────────────────────── */
 
-/* Small phones — Big (36) gets squished, drop to 4 cols */
+/* Portrait defaults */
+.card-grid[data-amount="mini"]   { --cols: 3; }
+.card-grid[data-amount="normal"] { --cols: 4; }
+.card-grid[data-amount="big"]    { --cols: 4; }
+
+/* Landscape overrides */
+@media (orientation: landscape) {
+  .card-grid[data-amount="mini"]   { --cols: 6; }
+  .card-grid[data-amount="normal"] { --cols: 8; }
+  .card-grid[data-amount="big"]    { --cols: 9; }
+}
+
+/* Tighter gaps on small phones (unrelated to column count) */
 @media (max-width: 480px) {
-  .card-grid:has(> :nth-child(36):last-child) { --cols: 4; }
   .card-grid { gap: 6px; }
 }
 
