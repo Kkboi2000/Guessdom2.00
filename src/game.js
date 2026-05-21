@@ -10,6 +10,10 @@
  *
  * History tracks "eliminated" state generically: a card may be eliminated
  * via flip OR cross OR delete. Undo restores them all.
+ *
+ * GRID-COLUMNS REFACTOR — renderSelectGrid / renderPlayGrid now take
+ * `currentAmount` so the grid can stamp data-amount and CSS can pick
+ * columns by intent + orientation.
  */
 
 import { cards }        from './data/cards.js';
@@ -75,11 +79,17 @@ export function initSelectScreen() {
   resetAnswerPreview();
   showSaveBtn(false);
 
-  renderSelectGrid(currentImages, currentCategory, currentLayout, (idx, cardData) => {
-    selectedIdx = idx;
-    setAnswerPreview(cardData, currentCategory);
-    showSaveBtn(true);
-  });
+  renderSelectGrid(
+    currentImages,
+    currentCategory,
+    currentLayout,
+    currentAmount,
+    (idx, cardData) => {
+      selectedIdx = idx;
+      setAnswerPreview(cardData, currentCategory);
+      showSaveBtn(true);
+    }
+  );
 }
 
 export function selectRandom() {
@@ -108,6 +118,7 @@ export function initPlayScreen() {
     currentImages,
     currentCategory,
     currentLayout,
+    currentAmount,
     handleCardClick
   );
 
