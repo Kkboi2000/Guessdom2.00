@@ -5,6 +5,11 @@
  * FIX #4/#8 — card images that 404 are hidden cleanly and a styled
  *             placeholder shows instead of the browser's broken-image icon.
  * FIX #1   — text uses --gd-text-size CSS variable (10/14/16pt).
+ *
+ * GRID-COLUMNS REFACTOR — renderSelectGrid / renderPlayGrid now accept
+ * an `amount` argument and stamp it onto the grid as data-amount, so
+ * CSS can drive columns via [data-amount="..."] + orientation media
+ * queries instead of brittle :has(:nth-child) child-counting.
  */
 
 import { cards }     from './data/cards.js';
@@ -168,11 +173,17 @@ export function makeCard(cardData, category, onClick) {
 
 // ─────────────────────────────────────────────
 // GRIDS
+//
+// `amount` is one of 'mini' | 'normal' | 'big'. It's stamped onto the
+// grid as data-amount so game.css can pick columns via attribute +
+// orientation media queries. Falls back to 'normal' if missing, which
+// matches the CSS default of 4 columns.
 // ─────────────────────────────────────────────
-export function renderSelectGrid(images, category, layout, onSelect) {
+export function renderSelectGrid(images, category, layout, amount, onSelect) {
   const grid = document.getElementById('select-grid');
   grid.innerHTML = '';
   grid.className = `card-grid grid-${layout}`;
+  grid.dataset.amount = amount || 'normal';
 
   images.forEach((cardData, i) => {
     const wrap = makeCard(cardData, category, (w, cd) => {
@@ -184,10 +195,11 @@ export function renderSelectGrid(images, category, layout, onSelect) {
   });
 }
 
-export function renderPlayGrid(images, category, layout, onCardClick) {
+export function renderPlayGrid(images, category, layout, amount, onCardClick) {
   const grid = document.getElementById('play-grid');
   grid.innerHTML = '';
   grid.className = `card-grid grid-${layout}`;
+  grid.dataset.amount = amount || 'normal';
 
   const gameCards = [];
   images.forEach((cardData) => {
