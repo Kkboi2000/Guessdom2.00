@@ -34,5 +34,5 @@ export default {
   pickCharacter: 'เลือกการ์ด',
   textSize: 'ขนาดตัวอักษร',
   normal24: 'ปกติ (24)',
-  confirmRefresh: 'แน่ใจไหม? การ์ดที่ล็อกไว้จะถูกพลิกด้วย',
+  confirmHome: 'กลับไปหน้าตั้งค่าไหม?',
 };
