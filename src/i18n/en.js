@@ -28,7 +28,7 @@ export default {
   continue: 'Continue',
   random: 'Random',
   save: 'Save',
-  confirmMsg: 'Are you sure? Locked cards will flip too.',
+  confirmRefresh: 'Are you sure? Locked cards will flip too.',
   yes: 'Yes',
   no: 'No',
   pickCharacter: 'Pick a card',
