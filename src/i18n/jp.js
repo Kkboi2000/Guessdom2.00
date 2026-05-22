@@ -34,5 +34,5 @@ export default {
   pickCharacter: 'カードを選ぶ',
   textSize: '文字サイズ',
   normal24: 'ノーマル (24)',
-  confirmRefresh: '本当によろしいですか? ロック済みのカードも裏返ります',
+  confirmHome: 'セットアップに戻りますか？',
 };
