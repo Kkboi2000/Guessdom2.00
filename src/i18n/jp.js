@@ -28,7 +28,7 @@ export default {
   continue: '続ける',
   random: 'ランダム',
   save: '保存',
-  confirmMsg: '本当にリセットしますか？ロックされたカードもめくれます。',
+  confirmRefresh: '本当にリセットしますか？ロックされたカードもめくれます。',
   yes: 'はい',
   no: 'いいえ',
   pickCharacter: 'カードを選ぶ',
