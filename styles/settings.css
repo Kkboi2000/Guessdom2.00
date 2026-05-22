@@ -15,14 +15,21 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.25rem;
+  
+  /* Increased font-size to make the emoji fill the circle properly */
+  font-size: 1.5rem; 
+  /* Ensures the emoji stays perfectly centered while spinning */
+  line-height: 1; 
+  
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   transition: background 0.2s, transform 0.2s;
 }
+
 #settings-btn:hover {
   background: rgba(255,255,255,0.3);
-  transform: scale(1.08) rotate(30deg);
+  /* This 30deg rotation you already wrote will look awesome with a gear! */
+  transform: scale(1.08) rotate(30deg); 
 }
 
 /* ═══════════════════════════════
