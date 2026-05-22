@@ -28,7 +28,7 @@ export default {
   continue: 'ถัดไป',
   random: 'สุ่ม',
   save: 'บันทึก',
-  confirmMsg: 'แน่ใจหรือไม่? การ์ดที่ล็อกไว้จะพลิกด้วย',
+  confirmRefresh: 'แน่ใจหรือไม่? การ์ดที่ล็อกไว้จะพลิกด้วย',
   yes: 'ใช่',
   no: 'ไม่',
   pickCharacter: 'เลือกการ์ด',
