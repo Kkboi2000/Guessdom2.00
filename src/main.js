@@ -174,7 +174,14 @@ document.getElementById('lock-btn').addEventListener('click', () => lockFlipped(
 document.getElementById('game-answer-box').addEventListener('click', () => toggleAnswer());
 
 // ── HOME BUTTON ───────────────────────────────────────
-document.getElementById('home-btn').addEventListener('click', () => openConfirm('home'));
+document.getElementById('home-btn').addEventListener('click', () => {
+  fullReset();
+  stopMusic();
+  setGameUI(false);
+  showSection('none');
+  showPage('setup');
+  window.__swapBgs?.();
+});
 
 // ── TIPS BUTTON ───────────────────────────────────────
 const tipsBtn   = document.getElementById('tips-btn');
