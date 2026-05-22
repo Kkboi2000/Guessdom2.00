@@ -194,6 +194,8 @@ let _confirmAction = null;
 
 function openConfirm(action) {
   _confirmAction = action;
+  const msg = action === 'home' ? t('confirmHome') : t('confirmRefresh');
+  document.getElementById('confirm-msg').textContent = msg;
   document.getElementById('confirm-overlay').classList.add('show');
 }
 
