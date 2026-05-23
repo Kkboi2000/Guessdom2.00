@@ -11,8 +11,6 @@
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="assets/icons/icon-192.png" />
   <title>Guessdom 2</title>
-
-  <!-- ── Stylesheets ── -->
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/settings.css" />
   <link rel="stylesheet" href="styles/menu.css" />
@@ -21,21 +19,12 @@
 </head>
 <body>
 
-<!-- ═══════════════════════════════════════════
-     SETTINGS BUTTON (persists across all pages)
-════════════════════════════════════════════ -->
-<button id="settings-btn" aria-label="Settings">
-  ⚙️
-</button>
+<button id="settings-btn" aria-label="Settings">⚙️</button>
 
-<!-- ═══════════════════════════════════════════
-     SETTINGS PANEL
-════════════════════════════════════════════ -->
 <div id="settings-overlay">
   <div id="settings-panel">
     <button class="settings-close" id="settings-close">✕</button>
     <h2 data-i18n="settings">Settings</h2>
-
     <div class="settings-row">
       <span class="settings-label" data-i18n="sound">Sound</span>
       <label class="toggle">
@@ -43,7 +32,6 @@
         <span class="toggle-slider"></span>
       </label>
     </div>
-
     <div class="settings-row">
       <span class="settings-label" data-i18n="music">Music</span>
       <label class="toggle">
@@ -51,7 +39,6 @@
         <span class="toggle-slider"></span>
       </label>
     </div>
-
     <div class="settings-row">
       <span class="settings-label" data-i18n="language">Language</span>
       <div class="seg-control" id="lang-seg">
@@ -60,7 +47,6 @@
         <button class="seg-btn" data-val="jp">日本語</button>
       </div>
     </div>
-
     <div class="settings-row">
       <span class="settings-label" data-i18n="discardAnim">Discard Anim</span>
       <div class="seg-control" id="anim-seg">
@@ -69,8 +55,6 @@
         <button class="seg-btn" data-val="delete" data-i18n="delete">Delete</button>
       </div>
     </div>
-
-    <!-- Text size — controls label font size (FIX #1) -->
     <div class="settings-row">
       <span class="settings-label" data-i18n="textSize">Text Size</span>
       <div class="seg-control" id="desc-seg">
@@ -79,14 +63,10 @@
         <button class="seg-btn" data-val="large"  data-i18n="large">L</button>
       </div>
     </div>
-
     <p class="settings-credit">Krit's vibe coding ✦ Guessdom 2</p>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     PAGE 1: MAIN MENU
-════════════════════════════════════════════ -->
 <div id="page-menu" class="page active">
   <img id="menu-bg"
        src="assets/backgrounds/menu-portrait.gif"
@@ -96,21 +76,14 @@
   <button id="start-btn" data-i18n="start">Start</button>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     PAGE 2: BOARD SETUP
-     FIX #3 — removed Size (Classic/Clear/Zoom) row.
-     Layout is now fixed to "classic" internally.
-════════════════════════════════════════════ -->
 <div id="page-setup" class="page">
   <img id="setup-bg"
        src="assets/backgrounds/boardsetup-portrait.gif"
        data-portrait="assets/backgrounds/boardsetup-portrait.gif"
        data-landscape="assets/backgrounds/boardsetup-landscape.gif"
        class="page-bg responsive-bg" alt="" />
-
   <div class="setup-card">
     <h2 class="setup-title" data-i18n="boardSetup">Board Setup</h2>
-
     <div class="setup-field">
       <div class="setup-field-label" data-i18n="amount">Amount</div>
       <div class="setup-seg seg-3" id="amount-seg">
@@ -119,10 +92,8 @@
         <button class="setup-seg-btn"        data-val="big"    data-i18n="big">Big (36)</button>
       </div>
     </div>
-
     <div class="setup-field">
       <div class="setup-field-label" data-i18n="categories">Categories</div>
-      <!-- FIX #2 — seg-5 ensures 5 buttons share space with no truncation -->
       <div class="setup-seg seg-5" id="cat-seg">
         <button class="setup-seg-btn active" data-val="people"     data-i18n="people">People</button>
         <button class="setup-seg-btn"        data-val="places"     data-i18n="places">Places</button>
@@ -131,25 +102,17 @@
         <button class="setup-seg-btn"        data-val="activities" data-i18n="activities">Activities</button>
       </div>
     </div>
-
     <button id="continue-btn" data-i18n="continue">Continue</button>
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     PAGE 3: GAME
-════════════════════════════════════════════ -->
 <div id="page-game" class="page">
-
   <img id="game-bg"
        src="assets/backgrounds/game-portrait.gif"
        data-portrait="assets/backgrounds/game-portrait.gif"
        data-landscape="assets/backgrounds/game-landscape.gif"
        class="page-bg responsive-bg" alt="" />
-
   <div id="game-inner">
-
-    <!-- CHARACTER SELECTION -->
     <div id="section-select">
       <div class="card-grid" id="select-grid"></div>
       <div class="answer-section">
@@ -162,8 +125,6 @@
         </div>
       </div>
     </div>
-
-    <!-- GAME PLAY -->
     <div id="section-play">
       <div class="card-grid" id="play-grid"></div>
       <div class="answer-section">
@@ -179,23 +140,38 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════
-     GLOBAL OVERLAYS
-════════════════════════════════════════════ -->
-
-<!-- Home button — FIX #5: now visible on BOTH select & play sections -->
+<!-- Home button -->
 <button id="home-btn" aria-label="Home">☷</button>
 
-<!-- Tips button -->
-<button id="tips-btn" aria-label="Tips">?</button>
-<div id="tips-panel">
-  <p data-i18n="tip1">Tap a card to flip it face-down when eliminated.</p>
-  <p data-i18n="tip2">Lock 🔒 locks all currently flipped cards so Undo skips them.</p>
-  <p data-i18n="tip3">Tap your secret card area to reveal your answer.</p>
+<!-- How To Play button -->
+<button id="tips-btn" aria-label="How to Play">ⓘ</button>
+
+<!-- How To Play Modal -->
+<div id="howto-overlay">
+  <div id="howto-panel">
+    <button id="howto-close" aria-label="Close">✕</button>
+    <h2 id="howto-title" data-i18n="howToPlay">How to Play</h2>
+    <div id="howto-steps">
+      <div class="howto-step">
+        <div class="howto-num">1.</div>
+        <div class="howto-step-title" data-i18n="howTo1Title">Pick a Character and Save</div>
+        <img class="howto-gif" src="assets/howto/howto1.gif" alt="Step 1" />
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">2.</div>
+        <div class="howto-step-title" data-i18n="howTo2Title">Ask … Yes or No</div>
+        <img class="howto-gif" src="assets/howto/howto2.gif" alt="Step 2" />
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">3.</div>
+        <div class="howto-step-title" data-i18n="howTo3Title">Flip the Card as the Answer</div>
+        <img class="howto-gif" src="assets/howto/howto3.gif" alt="Step 3" />
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Start animation overlay -->
@@ -214,10 +190,8 @@
   </div>
 </div>
 
-<!-- ── Entry point ── -->
 <script type="module" src="src/main.js"></script>
 
-<!-- ── Service Worker ── -->
 <script>
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
@@ -226,7 +200,6 @@
   }
 </script>
 
-<!-- ── Responsive BG swap ── -->
 <script>
   function swapBgs() {
     const isPortrait = window.matchMedia('(max-aspect-ratio: 1/1)').matches;
