@@ -1,12 +1,3 @@
-/**
- * main.js — Entry point for Guessdom 2
- *
- * Changes vs original:
- *  • Size (Classic/Clear/Zoom) row removed from setup → layout is fixed to 'classic'.
- *  • descSize seg wired through applyDescSize() to set font size in pt.
- *  • Home button confirm flow works from both select and play sections.
- */
-
 import en from './i18n/en.js';
 import th from './i18n/th.js';
 import jp from './i18n/jp.js';
@@ -59,7 +50,6 @@ refreshSettingsUI();
 syncMusic();
 
 // ── SETUP STATE ───────────────────────────────────────
-// Layout is fixed to 'classic' now (the Size row was removed).
 const FIXED_LAYOUT = 'classic';
 let chosenAmount   = 'normal';
 let chosenCategory = 'people';
@@ -147,15 +137,13 @@ document.getElementById('continue-btn').addEventListener('click', () => {
   setupGame(FIXED_LAYOUT, chosenAmount, chosenCategory);
   showPage('game');
   showSection('select');
-  setGameUI(true);              // home button visible from select screen now
+  setGameUI(true);
   initSelectScreen();
   window.__swapBgs?.();
 });
 
 // ── PAGE 3: SELECT SCREEN ─────────────────────────────
-document.getElementById('random-btn').addEventListener('click', () => {
-  selectRandom();
-});
+document.getElementById('random-btn').addEventListener('click', () => selectRandom());
 
 document.getElementById('save-btn').addEventListener('click', () => {
   playStartAnimation(() => {
@@ -176,17 +164,18 @@ document.getElementById('game-answer-box').addEventListener('click', () => toggl
 // ── HOME BUTTON ───────────────────────────────────────
 document.getElementById('home-btn').addEventListener('click', () => openConfirm('home'));
 
-// ── TIPS BUTTON ───────────────────────────────────────
-const tipsBtn   = document.getElementById('tips-btn');
-const tipsPanel = document.getElementById('tips-panel');
+// ── HOW TO PLAY ───────────────────────────────────────
+const tipsBtn      = document.getElementById('tips-btn');
+const howtoOverlay = document.getElementById('howto-overlay');
+const howtoClose   = document.getElementById('howto-close');
+
 tipsBtn.addEventListener('click', e => {
   e.stopPropagation();
-  tipsPanel.classList.toggle('open');
+  howtoOverlay.classList.toggle('open');
 });
-document.addEventListener('click', e => {
-  if (!tipsPanel.contains(e.target) && e.target !== tipsBtn) {
-    tipsPanel.classList.remove('open');
-  }
+howtoClose.addEventListener('click', () => howtoOverlay.classList.remove('open'));
+howtoOverlay.addEventListener('click', e => {
+  if (e.target === howtoOverlay) howtoOverlay.classList.remove('open');
 });
 
 // ── CONFIRM POPUP ─────────────────────────────────────
