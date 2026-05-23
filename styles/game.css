@@ -1,9 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   game.css — Guessdom 2 | gameplay page (select + play)
-   ─────────────────────────────────────────────────────────
-   IMPORTANT — this file does NOT redefine .page rules.
-   base.css already handles .page / .page.active.
-   Only styles things INSIDE #page-game.
+   game.css — Guessdom 2
    ═══════════════════════════════════════════════════════════ */
 
 #page-game { background: #1a0a00; }
@@ -44,18 +40,13 @@
 #section-select.show,
 #section-play.show { display: flex; }
 
-/* ─── Card grid ─────────────────────────────
-   The grid is given a max-width on desktop so cards don't
-   sprawl. grid-auto-rows uses min-content so the aspect
-   ratio of .card-wrap determines row height, not the
-   available container space.
-───────────────────────────────────────────── */
+/* ─── Card grid ─────────────────────────── */
 .card-grid {
   display: grid;
   gap: 8px;
   width: 100%;
-  max-width: 720px;          /* keeps cards reasonable on big desktop */
-  margin: 0 auto;            /* centers the grid */
+  max-width: 720px;
+  margin: 0 auto;
   padding: 6px 2px;
   align-content: start;
   grid-auto-rows: min-content;
@@ -66,33 +57,20 @@
   grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
 }
 
-/* ─── Card grid columns: data-amount + orientation ───
-   Replaces the old :has(:nth-child) child-count logic.
-   The amount is stamped onto the grid by ui.js at render
-   time, so column count is driven by intent (mini/normal/big)
-   instead of by counting children, and the landscape rules
-   fire whenever width > height — covering both rotated
-   phones and desktop browsers in one rule.
-───────────────────────────────────────────────────────── */
-
-/* Portrait defaults */
 .card-grid[data-amount="mini"]   { --cols: 3; }
 .card-grid[data-amount="normal"] { --cols: 4; }
 .card-grid[data-amount="big"]    { --cols: 4; }
 
-/* Landscape overrides */
 @media (orientation: landscape) {
   .card-grid[data-amount="mini"]   { --cols: 6; }
   .card-grid[data-amount="normal"] { --cols: 8; }
   .card-grid[data-amount="big"]    { --cols: 9; }
 }
 
-/* Tighter gaps on small phones (unrelated to column count) */
 @media (max-width: 480px) {
   .card-grid { gap: 6px; }
 }
 
-/* Wide desktop — bigger gap, the max-width above caps sprawl */
 @media (min-width: 900px) {
   .card-grid { gap: 12px; padding: 12px 4px; }
 }
@@ -120,8 +98,6 @@
   transform: translateY(-2px);
 }
 
-/* Flip container — top 80%. Critical: relative + overflow:hidden
-   constrains the X overlay. */
 .card-flip-container {
   position: relative;
   width: 100%;
@@ -230,8 +206,8 @@
 
 @keyframes gd-x-pop {
   0%   { transform: scale(0.3) rotate(-15deg); opacity: 0; }
-  60%  { transform: scale(1.2) rotate(5deg);    opacity: 1; }
-  100% { transform: scale(1) rotate(0);         opacity: 1; }
+  60%  { transform: scale(1.2) rotate(5deg);   opacity: 1; }
+  100% { transform: scale(1) rotate(0);        opacity: 1; }
 }
 
 /* ─── DISCARD: DELETE ───────────────────── */
@@ -240,7 +216,7 @@
   pointer-events: none;
 }
 @keyframes gd-card-delete {
-  0%   { transform: scale(1) rotate(0);       opacity: 1; }
+  0%   { transform: scale(1) rotate(0);        opacity: 1; }
   60%  { transform: scale(0.85) rotate(-3deg); opacity: 0.6; }
   100% { transform: scale(0) rotate(-10deg);   opacity: 0; }
 }
@@ -297,7 +273,7 @@
   text-overflow: ellipsis;
 }
 
-/* ─── Play: secret card box + controls ───── */
+/* ─── Play: secret card box + controls ─── */
 .game-answer-box {
   position: relative;
   width: 100px;
@@ -372,7 +348,7 @@
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
 }
-.ctrl-btn:active { transform: scale(0.92); }
+.ctrl-btn:active  { transform: scale(0.92); }
 .ctrl-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ─── Home button ───────────────────────── */
@@ -398,7 +374,7 @@
 #home-btn.show { display: flex; }
 #home-btn:active { transform: scale(0.9); }
 
-/* ─── Tips ──────────────────────────────── */
+/* ─── How To Play button ────────────────── */
 #tips-btn {
   position: fixed;
   bottom: max(env(safe-area-inset-bottom), 14px);
@@ -409,7 +385,7 @@
   border: none;
   background: rgba(255, 255, 255, 0.85);
   color: var(--text-dark);
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
@@ -419,21 +395,111 @@
 }
 body.in-game #tips-btn { display: block; }
 
-#tips-panel {
+/* ─── How To Play Modal ─────────────────── */
+#howto-overlay {
   position: fixed;
-  bottom: 64px;
-  right: 14px;
-  width: 260px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px 14px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
-  z-index: 60;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  z-index: 200;
   display: none;
-  font-size: 13px;
-  line-height: 1.4;
-  color: var(--text-dark);
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
 }
-#tips-panel.open { display: block; }
-#tips-panel p { margin: 0 0 6px; }
-#tips-panel p:last-child { margin-bottom: 0; }
+#howto-overlay.open { display: flex; }
+
+#howto-panel {
+  position: relative;
+  background: #f5ede0;
+  border-radius: 18px;
+  padding: 24px 20px 20px;
+  width: 100%;
+  max-width: 860px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  -webkit-overflow-scrolling: touch;
+}
+
+#howto-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: #b33;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+#howto-close:active { transform: scale(0.9); }
+
+#howto-title {
+  text-align: center;
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(22px, 4vw, 34px);
+  color: #5a4a1e;
+  margin: 0 0 20px;
+}
+
+#howto-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  #howto-steps { grid-template-columns: 1fr; }
+}
+
+.howto-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  border-right: 1px solid #d0b89055;
+  padding: 0 10px;
+}
+.howto-step:last-child { border-right: none; }
+
+@media (max-width: 600px) {
+  .howto-step {
+    border-right: none;
+    border-bottom: 1px solid #d0b89055;
+    padding: 16px 0;
+  }
+  .howto-step:last-child { border-bottom: none; }
+}
+
+.howto-num {
+  font-family: var(--font-display, sans-serif);
+  font-size: clamp(28px, 5vw, 48px);
+  color: #5a4a1e;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.howto-step-title {
+  font-size: clamp(13px, 2.2vw, 17px);
+  font-weight: 700;
+  color: #3a2a00;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.howto-gif {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  display: block;
+}
