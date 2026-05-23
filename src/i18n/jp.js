@@ -35,4 +35,8 @@ export default {
   textSize: '文字サイズ',
   normal24: 'ノーマル (24)',
   confirmHome: 'セットアップに戻りますか？',
+  howToPlay: '遊び方',
+  howTo1Title: 'キャラを選んで保存',
+  howTo2Title: '聞く… はい か いいえ',
+  howTo3Title: 'カードをめくって答える',
 };
