@@ -35,4 +35,8 @@ export default {
   textSize: 'Text Size',
   normal24: 'Normal (24)',
   confirmHome: 'Go back to setup?',
+  howToPlay: 'How to Play',
+  howTo1Title: 'Pick a Character and Save',
+  howTo2Title: 'Ask … Yes or No',
+  howTo3Title: 'Flip the Card as the Answer',
 };
