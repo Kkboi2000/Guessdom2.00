@@ -35,4 +35,8 @@ export default {
   textSize: 'ขนาดตัวอักษร',
   normal24: 'ปกติ (24)',
   confirmHome: 'กลับไปหน้าตั้งค่าไหม?',
+  howToPlay: 'วิธีเล่น',
+  howTo1Title: 'เลือกตัวละครแล้วบันทึก',
+  howTo2Title: 'ถาม… ใช่ หรือ ไม่ใช่',
+  howTo3Title: 'พลิกการ์ดเพื่อตอบ',
 };
