@@ -1,11 +1,11 @@
 /* ═══════════════════════════════════════════
    sw.js — Guessdom 2  |  cache-first strategy
-   Deploy URL: https://kkboi2000.github.io/guessdom2.0/
+   Deploy URL: https://guessdom2.netlify.app/
    Bump CACHE_VERSION on every deploy to force refresh
 ════════════════════════════════════════════ */
 
-const CACHE_VERSION = 'guessdom2-v3';
-const BASE = '/guessdom2.0';
+const CACHE_VERSION = 'guessdom2-v4';
+const BASE = '';
 
 const PRECACHE = [
   `${BASE}/`,
@@ -78,7 +78,7 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(key => key !== CACHE_VERSION && key !== CARD_CACHE)
+          .filter(key => key !== CACHE_VERSION && key !== 'guessdom2-cards-v1')
           .map(key => caches.delete(key))
       )
     ).then(() => self.clients.claim())
